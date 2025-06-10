@@ -36,6 +36,3 @@ wE worked on everything from parsing the data to creating a simple, interactive 
 
 ---
 
-## Folder Structure
-
-# Momo_data_analysis
