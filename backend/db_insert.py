@@ -1,17 +1,14 @@
-# db_insert.py
-
 import sqlite3
 import csv
 
-# Database file
 DB_FILE = 'momo_sms.db'
 CSV_FILE = 'cleaned_sms_data.csv'
 
-# Connect to the database
+# Connect to the SQLite database
 conn = sqlite3.connect(DB_FILE)
 cursor = conn.cursor()
 
-# Get or create transaction type
+# Helper: Get or insert transaction type
 def get_type_id(type_name):
     cursor.execute("SELECT id FROM transaction_types WHERE name = ?", (type_name,))
     row = cursor.fetchone()
@@ -21,8 +18,10 @@ def get_type_id(type_name):
     conn.commit()
     return cursor.lastrowid
 
-# Get or create agent
+# Helper: Get or insert agent
 def get_agent_id(name, phone):
+    if not name:
+        return None
     cursor.execute("SELECT id FROM agents WHERE name = ? AND phone = ?", (name, phone))
     row = cursor.fetchone()
     if row:
@@ -31,31 +30,34 @@ def get_agent_id(name, phone):
     conn.commit()
     return cursor.lastrowid
 
-# Read CSV and insert into database
+# Read CSV and insert data
 with open(CSV_FILE, newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        type_id = get_type_id(row['type'])
-        agent_id = get_agent_id(row['agent_name'], row['agent_phone']) if row['agent_name'] else None
+        try:
+            type_id = get_type_id(row['type'].strip())
+            agent_id = get_agent_id(row['agent_name'].strip(), row['agent_phone'].strip()) if row.get('agent_name') else None
 
-        cursor.execute('''
-            INSERT OR IGNORE INTO transactions (
-                transaction_id, amount, currency, date, type_id, agent_id,
-                sender_name, receiver_name, fee, source
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            row['transaction_id'],
-            int(row['amount']),
-            row.get('currency', 'RWF'),
-            row['date'],
-            type_id,
-            agent_id,
-            row.get('sender_name'),
-            row.get('receiver_name'),
-            int(row['fee']) if row.get('fee') else None,
-            row.get('source', 'Mobile')
-        ))
+            cursor.execute('''
+                INSERT OR IGNORE INTO transactions (
+                    transaction_id, amount, currency, date, type_id, agent_id,
+                    sender_name, receiver_name, fee, source
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                row['transaction_id'].strip(),
+                int(row['amount']),
+                row.get('currency', 'RWF').strip(),
+                row['date'].strip(),
+                type_id,
+                agent_id,
+                row.get('sender_name', '').strip() or None,
+                row.get('receiver_name', '').strip() or None,
+                int(row['fee']) if row.get('fee') else None,
+                row.get('source', 'Mobile').strip()
+            ))
+        except Exception as e:
+            print(f"Skipping row due to error: {e} - {row}")
 
 conn.commit()
 conn.close()
-print("Data inserted successfully.")
+print("✅ Data inserted successfully.")
