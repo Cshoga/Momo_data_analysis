@@ -1,10 +1,10 @@
 import sqlite3
 import csv
 
-DB_FILE = 'momo_sms.db'
-CSV_FILE = 'cleaned_sms_data.csv'
+DB_FILE = 'sms.db'
 
 conn = sqlite3.connect(DB_FILE)
+conn.execute("PRAGMA foreign_keys = ON")
 cursor = conn.cursor()
 
 def get_type_id(type_name):
