@@ -4,11 +4,9 @@ import csv
 DB_FILE = 'momo_sms.db'
 CSV_FILE = 'cleaned_sms_data.csv'
 
-# Connect to the SQLite database
 conn = sqlite3.connect(DB_FILE)
 cursor = conn.cursor()
 
-# Helper: Get or insert transaction type
 def get_type_id(type_name):
     cursor.execute("SELECT id FROM transaction_types WHERE name = ?", (type_name,))
     row = cursor.fetchone()
@@ -18,7 +16,6 @@ def get_type_id(type_name):
     conn.commit()
     return cursor.lastrowid
 
-# Helper: Get or insert agent
 def get_agent_id(name, phone):
     if not name:
         return None
@@ -30,7 +27,6 @@ def get_agent_id(name, phone):
     conn.commit()
     return cursor.lastrowid
 
-# Read CSV and insert data
 with open(CSV_FILE, newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
