@@ -2,11 +2,9 @@ import xml.etree.ElementTree as ET
 import re
 from db import create_database, insert_transaction
 
-# Path to your XML file
 XML_FILE = "modified_sms_v2.xml"
 UNPROCESSED_FILE = "backend/unprocessed.txt"
 
-# List of keyword patterns and their categories
 CATEGORY_PATTERNS = [
     (r"you have received", "Incoming Money"),
     (r"sent to code \d+", "Payments to Code Holders"),
@@ -32,7 +30,6 @@ def extract_amount(text):
     return int(match.group(1)) if match else 0
 
 def extract_date(sms_elem):
-    # Attempt to extract from 'date' attribute or custom format
     return sms_elem.attrib.get("date", "")
 
 def parse_sms():
@@ -47,10 +44,8 @@ def parse_sms():
             date = extract_date(sms)
             amount = extract_amount(body)
             category = categorize_message(body)
-
-            # Basic dummy extraction — refine with your message structure
             sender = sms.attrib.get("address", "")
-            receiver = ""  # Can be refined by parsing the body if needed
+            receiver = "" 
 
             if amount == 0 or category == "Uncategorized":
                 log_file.write(body + "\n")
