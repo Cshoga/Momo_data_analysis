@@ -18,6 +18,7 @@ def get_transactions():
         params.append(category)
 
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON")
     cur = conn.cursor()
     cur.execute(query, params)
     rows = cur.fetchall()
@@ -28,6 +29,7 @@ def get_transactions():
 @app.route("/summary")
 def get_summary():
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON")
     cur = conn.cursor()
     cur.execute("SELECT category, SUM(amount) FROM transactions GROUP BY category")
     rows = cur.fetchall()
