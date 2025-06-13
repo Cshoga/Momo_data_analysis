@@ -32,6 +32,30 @@ def extract_amount(text):
 def extract_date(sms_elem):
     return sms_elem.attrib.get("date", "")
 
+def insert_transaction(transaction_id, amount, currency, date, type_name, sender, receiver, fee, source):
+    conn = sqlite3.connect(DB_FILE)
+    conn.execute("PRAGMA foreign_keys = ON")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM transaction_types WHERE name = ?", (type_name,))
+    row = cursor.fetchone()
+    if row:
+        type_id = row[0]
+    else:
+        cursor.execute("INSERT INTO transaction_types (name) VALUES (?)", (type_name,))
+        conn.commit()
+        type_id = cursor.lastrowid
+    cursor.execute('''
+        INSERT OR IGNORE INTO transactions (
+            transaction_id, amount, currency, date, type_id, agent_id,
+            sender_name, receiver_name, fee, source
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        transaction_id, amount, currency, date, type_id, None,
+        sender, receiver, fee, source
+    ))
+    conn.commit()
+    conn.close()
+
 def parse_sms():
     tree = ET.parse(XML_FILE)
     root = tree.getroot()
