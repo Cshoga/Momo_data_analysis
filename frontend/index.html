@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoMo Analytics Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-container">
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Navigation -->
+        <header class="top-header">
+            <div class="header-left">
+                <h1 class="page-title">MoMo Analysis Dashboard</h1>
+                <div class="breadcrumb">
+
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+
+
+            </div>
+        </header>
+
+
+        <div class="dashboard-content">
+
+            <section class="card-grid overview-cards">
+                <div class="card stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 class="stat-title">Total Balance</h3>
+                        <div class="stat-value">$86,589</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>21.8%</span>
+                            <span class="period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-chart" id="revenueChart"></div>
+                </div>
+
+
+
+                <div class="card stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 class="stat-title">Total Income</h3>
+                        <div class="stat-value">18,472</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12.5%</span>
+                            <span class="period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-chart" id="ordersChart"></div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 class="stat-title">Total Expense</h3>
+                        <div class="stat-value">$328</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>2.7%</span>
+                            <span class="period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-chart" id="avgOrderChart"></div>
+                </div>
+            </section>
+
+
+            <section class="card-grid main-charts">
+                <div class="card chart-card large">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Transactions</h2>
+                        <div class="card-actions">
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="revenueOverviewChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card chart-card medium">
+                    <div class="card-header">
+                        <h2 class="card-title">View Transaction Details</h2>
+                        <div class="card-actions">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container donut-container">
+                            <canvas id="salesByCategoryChart"></canvas>
+                        </div>
+                        <div class="chart-legend" id="categoryLegend"></div>
+                    </div>
+                </div>
+
+                <div class="card chart-card medium">
+                    <div class="card-header">
+                        <h2 class="card-title">Chart</h2>
+                        <div class="card-actions">
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="customerGrowthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="card-grid bottom-charts">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Monthly Trends</h2>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="trendsChart" width="300" height="200"></canvas>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color payments-color"></div>
+                                <span>Payments</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color deposits-color"></div>
+                                <span>Deposits</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Transaction Volume by Type</h2>
+            </div>
+            <div class="card-content">
+                <canvas id="volumeChart" width="300" height="200"></canvas>
+            </div>
+        </div>
+            </section>
+
+
+
+
+            </div>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
