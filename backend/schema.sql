@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS transaction_types (
     name TEXT UNIQUE NOT NULL
 );
 
--- Table for agents 
+-- Table for agents
 CREATE TABLE IF NOT EXISTS agents (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     transaction_id TEXT UNIQUE NOT NULL,
     amount INTEGER NOT NULL,
     currency TEXT DEFAULT 'RWF',
-    date TEXT NOT NULL,
+    date TEXT NOT NULL, 
     type_id INTEGER NOT NULL,
     agent_id INTEGER,
     sender_name TEXT,
