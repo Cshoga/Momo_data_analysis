@@ -18,7 +18,6 @@ def query_db(query, args=(), one=False):
 
 @app.route("/api/summary")
 def summary():
-    # Sum income and expenses by type name
     rows = query_db("""
         SELECT tt.name, SUM(t.amount) as total
         FROM transactions t
@@ -36,7 +35,6 @@ def summary():
 
     total_balance = total_income - total_expense
 
-    # Placeholder for change values
     return jsonify({
         "total_balance": total_balance,
         "balance_change": 0,
@@ -57,7 +55,6 @@ def recent_transactions():
     """)
     result = []
     for r in rows:
-        # Splitting date/time for frontend labels (adjust if your date format differs)
         date = r["date"].split(" ")[0]
         time = r["date"].split(" ")[1] if " " in r["date"] else "00:00"
         result.append({
@@ -68,7 +65,7 @@ def recent_transactions():
             "type": r["type"],
             "sender_name": r["sender_name"],
             "receiver_name": r["receiver_name"],
-            "balance": 0  # If you track balance, else keep 0 or calculate
+            "balance": 0  
         })
     return jsonify(result)
 
