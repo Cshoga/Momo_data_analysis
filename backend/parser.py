@@ -7,7 +7,7 @@ db = sqlite3.connect("sms.db")
 db.execute("PRAGMA foreign_keys = ON")
 cur = db.cursor()
 
-tree = ET.parse("messages.xml")
+tree = ET.parse("modified_sms_v2.xml")
 root = tree.getroot()
 
 cur.execute("SELECT id, name FROM transaction_types")
