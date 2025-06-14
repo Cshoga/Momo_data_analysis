@@ -18,8 +18,7 @@ async function loadDashboardData() {
 async function loadStats() {
     const response = await fetch(`${API_BASE_URL}/summary`);
     const stats = await response.json();
-    
-    
+
     updateStatCard(1, stats.total_balance, stats.balance_change);
     updateStatCard(2, stats.total_income, stats.income_change);
     updateStatCard(3, stats.total_expense, stats.expense_change);
@@ -28,9 +27,9 @@ async function loadStats() {
 function updateStatCard(cardIndex, value, change) {
     const card = document.querySelector(`.stat-card:nth-child(${cardIndex})`);
     card.querySelector('.stat-value').textContent = `$${value.toLocaleString()}`;
-    
+
     const changeElement = card.querySelector('.stat-change');
-    changeElement.querySelector('span:first-child').textContent = 
+    changeElement.querySelector('span:first-child').textContent =
         `${change > 0 ? '+' : ''}${change}%`;
     changeElement.className = `stat-change ${change >= 0 ? 'positive' : 'negative'}`;
 }
@@ -44,7 +43,7 @@ async function loadCharts() {
     ];
 
     await Promise.all(
-        chartLoaders.map(({ id, loader }) => 
+        chartLoaders.map(({ id, loader }) =>
             document.getElementById(id) ? loader() : Promise.resolve()
         )
     );
@@ -53,10 +52,10 @@ async function loadCharts() {
 async function loadRecentTransactions() {
     const response = await fetch(`${API_BASE_URL}/recent-transactions`);
     const transactions = await response.json();
-    
+
     const ctx = document.getElementById('revenueOverviewChart').getContext('2d');
     const labels = transactions.map(t => `${t.date} ${t.time.substring(0,5)}`).reverse();
-    
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -85,9 +84,9 @@ async function loadRecentTransactions() {
 async function loadTransactionTypes() {
     const response = await fetch(`${API_BASE_URL}/transaction-types`);
     const types = await response.json();
-    
+
     const ctx = document.getElementById('salesByCategoryChart').getContext('2d');
-    
+
     new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -106,9 +105,9 @@ async function loadTransactionTypes() {
 async function loadMonthlyTrends() {
     const response = await fetch(`${API_BASE_URL}/monthly-trends`);
     const trends = await response.json();
-    
+
     const ctx = document.getElementById('trendsChart').getContext('2d');
-    
+
     new Chart(ctx, {
         type: 'bar',
         data: {
@@ -137,9 +136,9 @@ async function loadMonthlyTrends() {
 async function loadVolumeChart() {
     const response = await fetch(`${API_BASE_URL}/volume-by-type`);
     const volume = await response.json();
-    
+
     const ctx = document.getElementById('volumeChart').getContext('2d');
-    
+
     new Chart(ctx, {
         type: 'pie',
         data: {
@@ -154,6 +153,7 @@ async function loadVolumeChart() {
         options: getChartOptions('default')
     });
 }
+
 function getChartOptions(type) {
     const baseOptions = {
         responsive: true,
@@ -182,28 +182,13 @@ function getChartColors(count) {
 
 function showError(message) {
     const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-notification';
     errorDiv.innerHTML = `
         <i class="fas fa-exclamation-triangle"></i>
         <span>${message}</span>
         <button onclick="this.parentElement.remove()">×</button>
     `;
-    
-    Object.assign(errorDiv.style, {
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: '#FEF2F2',
-        color: '#DC2626',
-        padding: '15px',
-        borderRadius: '8px',
-        border: '1px solid #FECACA',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-        zIndex: '1000',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px'
-    });
-    
+
     document.body.appendChild(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
 }

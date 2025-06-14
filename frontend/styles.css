@@ -28,6 +28,10 @@
     --purple-light: rgba(139, 92, 246, 0.1);
     --orange: #f59e0b;
     --orange-light: rgba(245, 158, 11, 0.1);
+    -red: #ef4444;
+    --error-bg: #fef2f2;
+    --error-text: #dc2626;
+    --error-border: #fecaca;
 
 }
 
@@ -160,17 +164,61 @@ button {
     color: var(--text-secondary);
     font-size: 0.875rem;
 }
+.error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--error-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 400px;
+    animation: slideInRight 0.3s ease-out;
+}
 
+.error-notification button {
+    background: none;
+    border: none;
+    color: var(--error-text);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color var(--transition-fast);
+}
 
+.error-notification button:hover {
+    background-color: rgba(220, 38, 38, 0.1);
+}
 
-/* Dashboard Content */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .dashboard-content {
     flex-grow: 1;
     padding: var(--spacing-xl);
     background-color: var(--bg-primary);
 }
-
-/* Card Grid */
 .card-grid {
     display: grid;
     gap: var(--spacing-xl);
@@ -269,9 +317,6 @@ button {
     padding: var(--spacing-xl);
 }
 
-
-
-/* Stat Cards */
 .stat-card {
     display: flex;
     padding: var(--spacing-xl);
