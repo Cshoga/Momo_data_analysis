@@ -28,10 +28,11 @@ def summary():
     total_income = 0
     total_expense = 0
     for row in rows:
-        if row["name"].lower() == "income":
-            total_income = row["total"] or 0
-        elif row["name"].lower() == "expense":
-            total_expense = row["total"] or 0
+        name = row["name"].lower()
+        if "incoming" in name or "deposit" in name:
+            total_income += row["total"] or 0
+        elif "withdraw" in name or "payment" in name:
+            total_expense += row["total"] or 0
 
     total_balance = total_income - total_expense
 
