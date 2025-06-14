@@ -3,68 +3,75 @@ import xml.etree.ElementTree as ET
 import re
 from datetime import datetime
 
-db = sqlite3.connect("sms.db")
-db.execute("PRAGMA foreign_keys = ON")
-cur = db.cursor()
+DB = "sms.db"
+XML = "modified_sms_v2.xml"
+LOG = "unprocessed.txt"
 
-tree = ET.parse("modified_sms_v2.xml")
-root = tree.getroot()
+conn = sqlite3.connect(DB)
+conn.execute("PRAGMA foreign_keys = ON")
+cur = conn.cursor()
 
 cur.execute("SELECT id, name FROM transaction_types")
-types = {name.lower(): id for id, name in cur.fetchall()}
+types = {name: id for id, name in cur.fetchall()}
 
-def insert_type(name):
-    lower = name.lower()
-    if lower not in types:
-        cur.execute("INSERT INTO transaction_types (name) VALUES (?)", (name,))
-        db.commit()
-        types[lower] = cur.lastrowid
-    return types[lower]
+def get_type_id(name):
+    if name in types:
+        return types[name]
+    cur.execute("INSERT INTO transaction_types (name) VALUES (?)", (name,))
+    conn.commit()
+    types[name] = cur.lastrowid
+    return types[name]
 
 def parse_amount(text):
-    m = re.search(r'(\d[\d,]*)\s*RWF', text)
-    if m:
-        return int(m.group(1).replace(',', ''))
-    return 0
+    m = re.search(r"(\d[\d,]*)\s*RWF", text.replace(",", ""))
+    return int(m.group(1)) if m else 0
 
-def parse_date(timestamp):
+def parse_date(ms):
     try:
-        return datetime.fromtimestamp(int(timestamp) / 1000).strftime("%Y-%m-%d %H:%M:%S")
+        ts = int(ms) / 1000
+        return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
     except:
         return None
 
 def categorize(text):
-    if "agaciro" in text.lower():
-        return "Donation"
-    if "received" in text.lower() and "from" in text.lower():
-        return "Incoming Money"
-    if "sent to" in text.lower():
-        return "Transfer to Mobile"
-    if "paid to" in text.lower():
-        return "Payment"
-    if "withdrew" in text.lower():
-        return "Withdrawal"
-    if "airtime" in text.lower():
-        return "Airtime"
-    if "bundle" in text.lower():
-        return "Bundle"
-    if "bank" in text.lower():
-        return "Bank"
-    return "Other"
+    t = text.lower()
+    if "received" in t: return "Incoming Money"
+    if "payment of" in t: return "Payment"
+    if "transferred to" in t: return "Transfer to Mobile Numbers"
+    if "bank deposit" in t: return "Bank Deposits"
+    if "airtime" in t: return "Airtime Bill Payments"
+    if "cash deposit" in t or "cash power" in t: return "Cash Power Bill Payments"
+    if "withdrew" in t or "withdrawn" in t: return "Withdrawals from Agents"
+    if "bank" in t and "transfer" in t: return "Bank Transfers"
+    if "bundle" in t or "internet" in t or "voice" in t: return "Internet and Voice Bundle Purchases"
+    return None
 
-for sms in root.findall("sms"):
-    body = sms.attrib.get("body", "")
-    date = parse_date(sms.attrib.get("date", "0"))
-    amount = parse_amount(body)
-    t_id = sms.attrib.get("date") + sms.attrib.get("address", "")
-    category = categorize(body)
-    type_id = insert_type(category)
+tree = ET.parse(XML)
+root = tree.getroot()
 
-    cur.execute("""
-        INSERT OR IGNORE INTO transactions (
-            transaction_id, amount, date, type_id
-        ) VALUES (?, ?, ?, ?)
-    """, (t_id, amount, date, type_id))
+with open(LOG, "w", encoding="utf-8") as lf:
+    for sms in root.findall(".//sms"):
+        body = sms.attrib.get("body", "")
+        date = parse_date(sms.attrib.get("date", "0"))
+        amount = parse_amount(body)
+        category = categorize(body)
 
-db.commit()
-db.close()
+        if not date or amount <= 0 or not category:
+            lf.write(body + "\n")
+            continue
+
+        tid = sms.attrib.get("date", "") + sms.attrib.get("address", "")
+        type_id = get_type_id(category)
+        cur.execute("""
+            INSERT OR IGNORE INTO transactions (
+                transaction_id, amount, currency, date, type_id, agent_id,
+                sender_name, receiver_name, fee, source
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            tid, amount, "RWF", date, type_id, None,
+            sms.attrib.get("address", ""), None, None, "Mobile"
+        ))
+
+conn.commit()
+conn.close()
+print("done")
