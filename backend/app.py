@@ -7,7 +7,7 @@ CORS(app)
 
 DB_PATH = "sms.db"
 
-@app.route("/transactions")
+@app.route("/api/transactions")
 def get_transactions():
     category = request.args.get("category")
     query = "SELECT * FROM transactions"
@@ -26,7 +26,7 @@ def get_transactions():
 
     return jsonify(rows)
 
-@app.route("/summary")
+@app.route("/api/summary")
 def get_summary():
     conn = sqlite3.connect(DB_PATH)
     conn.execute("PRAGMA foreign_keys = ON")
