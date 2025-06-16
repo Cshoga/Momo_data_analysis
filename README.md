@@ -97,3 +97,6 @@ The project comes with a sample database (`momo.db`). If you want to import your
 - If you get CORS errors, ensure the backend is running and CORS is properly configured
 - If the database is empty, check if the schema was properly initialized
 - Make sure both frontend and backend servers are running simultaneously
+
+
+Demo Video:https://www.youtube.com/watch?si=ZdpgFzud72Bz5gUz&v=E07pCWaLifQ&feature=youtu.be
