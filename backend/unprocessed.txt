@@ -1,0 +1,20 @@
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :2476.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :2527.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :2900.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :9591.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :4666.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :0086.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: Yello!Umaze kugura 500FRW(800MB) igura 500 RWF
+UNPROCESSED: Yello!Umaze kugura 500FRW(800MB) igura 500 RWF
+UNPROCESSED: A reversal has been initiated for your transaction to Mediatrice UWAYISENGA (250788658286) with 3000 RWF.
+UNPROCESSED: Yello!Umaze kugura 500FRW(800MB) igura 500 RWF
+UNPROCESSED: Yello!Umaze kugura 500FRW(800MB) igura 500 RWF
+UNPROCESSED: Yello!Umaze kugura 1,000FRW(2200MB) igura 1,000 RWF
+UNPROCESSED: Yello!Umaze kugura 1,000FRW(2200MB) igura 1,000 RWF
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :2632.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: <#> Dear Customer, your MTN MoMo application one-time password is :1827.MTN MoMo does not recommend that you share or expose your one-time password with anyone. Be Vigilant. RdbS6eMOXvx N/RywfrtIZL>.
+UNPROCESSED: 1) 2024-08-23 DEPOSIT RWF 25000 Receiver: 250795963036 Sender:  Fee: RWF
+UNPROCESSED: *143*R*Y'ello, the transaction with amount 14200 RWF for ESICIA LTD with message: 1734874172692585358074144 failed at 2024-09-21 15:49:01 .Please Contact MobileMoney HelpLine for Assistance.Thank you for using MTN MobileMoney.*EN#
+UNPROCESSED: *143*S*Your transaction to Mediatrice UWAYISENGA (250788658286) with 3000 RWF has been reversed at 2024-10-07 14:37:00. Your new balance is 10312 RWF. .Thank you for using MTN MobileMoney.*EN#
+UNPROCESSED: *143*R*Y'ello, the transaction with amount 11600 RWF for ESICIA LTD with message: 1763055172864732058074359 failed at 2024-10-11 14:00:00 .Please Contact MobileMoney HelpLine for Assistance.Thank you for using MTN MobileMoney.*EN#
+UNPROCESSED: *143*R*Y'ello, the transaction with amount 5000 RWF for Data Bundle MTN with message:  failed at 2024-11-12 23:58:00 .Please Contact MobileMoney HelpLine for Assistance.Thank you for using MTN MobileMoney.*EN#
