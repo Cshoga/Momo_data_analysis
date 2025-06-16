@@ -1,4 +1,4 @@
-const response = await fetch(`${API_BASE_URL}/summary`);
+const API_BASE_URL = 'http://localhost:5000/api';
 
 let modal;
 let closeModal;
@@ -50,7 +50,7 @@ async function fetchAPI(endpoint) {
     }
 }
 
-function showError(message = "Unable to connect to the serever. Please make sure your Flask backend is running on http://localhost:5000") {
+function showError(message = "Unable to connect to the server. Please make sure your Flask backend is running on http://localhost:5000") {
     document.getElementById('loadingSpinner').style.display = 'none';
     const errorMessageElement = document.getElementById('errorMessage');
     if (errorMessageElement) {
@@ -553,6 +553,7 @@ function changePage(direction) {
 
 function togglePeriod() {
     currentPeriod = currentPeriod === 'daily' ? 'monthly' : 'daily';
+    document.getElementById('currentPeriod').textContent = currentPeriod === 'daily' ? 'Daily View' : 'Monthly View';
     loadTimeAnalysis();
 }
 
@@ -564,10 +565,6 @@ function handleNavigation(event) {
     });
     document.getElementById(targetId).classList.add('active');
 
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
 }
 
 function toggleSidebar() {
@@ -603,66 +600,14 @@ function initializeDashboard() {
     loadCategorySummary();
 }
 
-function handleSearch(event) {
-    const searchTerm = event.target.value.trim().toLowerCase();
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    const minAmount = document.getElementById('minAmount').value;
-    const maxAmount = document.getElementById('maxAmount').value;
-    
-    const tbody = document.querySelector('.transactions-table tbody');
-    const rows = tbody.getElementsByTagName('tr');
-
-    for (let row of rows) {
-        const text = row.textContent.toLowerCase();
-        const dateCell = row.querySelector('.transaction-date');
-        const amountCell = row.querySelector('.transaction-amount');
-        
-        const rowDate = new Date(dateCell.textContent);
-        const rowAmount = parseFloat(amountCell.textContent.replace(/[^0-9.-]+/g, ''));
-        
-        const matchesSearch = text.includes(searchTerm);
-        const matchesDateRange = (!startDate || rowDate >= new Date(startDate)) && 
-                                (!endDate || rowDate <= new Date(endDate));
-        const matchesAmountRange = (!minAmount || rowAmount >= parseFloat(minAmount)) && 
-                                  (!maxAmount || rowAmount <= parseFloat(maxAmount));
-        
-        row.style.display = matchesSearch && matchesDateRange && matchesAmountRange ? '' : 'none';
-    }
-}
-
 function setupEventListeners() {
     document.querySelectorAll('.nav-item a').forEach(link => {
         link.addEventListener('click', handleNavigation);
     });
     
-    const searchInput = document.querySelector('.search-container input');
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput = document.getElementById('endDate');
-    const minAmountInput = document.getElementById('minAmount');
-    const maxAmountInput = document.getElementById('maxAmount');
-    
-    if (searchInput) {
-        searchInput.addEventListener('input', handleSearch);
-    }
-    if (startDateInput) {
-        startDateInput.addEventListener('change', handleSearch);
-    }
-    if (endDateInput) {
-        endDateInput.addEventListener('change', handleSearch);
-    }
-    if (minAmountInput) {
-        minAmountInput.addEventListener('input', handleSearch);
-    }
-    if (maxAmountInput) {
-        maxAmountInput.addEventListener('input', handleSearch);
-    }
-    
-    document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
-    
     document.querySelector('.sidebar-toggle').addEventListener('click', toggleSidebar);
 
-       const refreshTransactionsBtn = document.querySelector('#recentTransactionsRefreshBtn');
+    const refreshTransactionsBtn = document.querySelector('#recentTransactionsRefreshBtn');
     if (refreshTransactionsBtn) {
         refreshTransactionsBtn.addEventListener('click', () => loadTransactions(currentCategory));
     }
