@@ -8,26 +8,29 @@ import os
 app = Flask(__name__)
 CORS(app) 
 
+# getting the path to database file
 def get_db_connection():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(script_dir)
     db_path = os.path.join(root_dir, "momo.db")
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = sqlite3.Row  # will access columns by name
     return conn
 
 @app.route("/api/overview")
 def get_overview():
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
+    # total transactions and amount for Mobile source
     cur.execute("""
         SELECT COUNT(*) as count, SUM(amount) as total
         FROM transactions
         WHERE source = 'Mobile'
     """)
     total_stats = cur.fetchone()
-    
+
+     # adding incoming and outgoing amounts by category
     cur.execute("""
         SELECT 
             SUM(CASE WHEN tt.name IN ('Incoming Money', 'Bank Deposits') THEN amount ELSE 0 END) as incoming,
@@ -37,7 +40,8 @@ def get_overview():
         WHERE t.source = 'Mobile'
     """)
     money_flow = cur.fetchone()
-    
+
+    # statistics for the last 30 days
     last_month = datetime.now() - timedelta(days=30)
     cur.execute("""
         SELECT COUNT(*) as count, SUM(amount) as total
@@ -57,7 +61,8 @@ def get_overview():
     
     count_trend = ((total_count - last_month_count) / last_month_count * 100) if last_month_count > 0 else 0
     amount_trend = ((total_amount - last_month_amount) / last_month_amount * 100) if last_month_amount > 0 else 0
-    
+
+    # returning JSON response
     return jsonify({
         "total_transactions": total_count,
         "total_volume": total_amount,
@@ -73,7 +78,8 @@ def get_overview():
 def get_category_distribution():
     conn = get_db_connection()
     cur = conn.cursor()
-    
+
+    # getting count and addition of transactions per category
     cur.execute("""
         SELECT 
             tt.name as category,
@@ -102,6 +108,7 @@ def get_paginated_transactions():
     sort_by = request.args.get('sort_by', 'date')
     sort_order = request.args.get('sort_order', 'desc')
     
+    # validating sorting inputs
     valid_sort_columns = ['date', 'amount', 'transaction_id']
     if sort_by not in valid_sort_columns:
         sort_by = 'date'
@@ -177,6 +184,7 @@ def get_time_analysis():
     cur = conn.cursor()
     
     if period == 'daily':
+        # getting daily counts and addition for last 30 days
         cur.execute("""
             SELECT 
                 strftime('%Y-%m-%d', date) as date,
@@ -188,6 +196,7 @@ def get_time_analysis():
             LIMIT 30
         """)
     elif period == 'monthly':
+        # getting monthly counts and addition for last 12 months
         cur.execute("""
             SELECT 
                 strftime('%Y-%m', date) as month,
