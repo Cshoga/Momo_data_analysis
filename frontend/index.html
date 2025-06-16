@@ -11,170 +11,246 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="app-container">
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Top Navigation -->
-        <header class="top-header">
-            <div class="header-left">
-                <h1 class="page-title">MoMo Analysis Dashboard</h1>
-                <div class="breadcrumb">
-
-                </div>
-            </div>
-
-            <div class="header-right">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-
-
-            </div>
-        </header>
-
-
-        <div class="dashboard-content">
-
-            <section class="card-grid overview-cards">
-                <div class="card stat-card">
-                    <div class="stat-icon blue">
-                        <i class="fas fa-dollar-sign"></i>
+    <div class="app-container">
+        
+        
+        <main class="main-content">
+     
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title"><span class="yellow-text">MoMo</span> Analytics Dashboard</h1>
+                    <div class="breadcrumb">
                     </div>
-                    <div class="stat-details">
-                        <h3 class="stat-title">Total Balance</h3>
-                        <div class="stat-value">$86,589</div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>21.8%</span>
-                            <span class="period">vs last month</span>
+                </div>
+                
+                <div class="header-right">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search transactions..." id="searchInput">
+                        <div class="search-filters">
+                            <div class="date-range">
+                                <input type="date" id="startDate" placeholder="Start Date">
+                                <input type="date" id="endDate" placeholder="End Date">
+                            </div>
+                            <div class="amount-range">
+                                <input type="number" id="minAmount" placeholder="Min Amount">
+                                <input type="number" id="maxAmount" placeholder="Max Amount">
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-chart" id="revenueChart"></div>
+                    
+                    <div class="header-actions">
+                        <button class="action-button" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        
+                        <button class="theme-toggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            
+            <div class="dashboard-content">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Loading dashboard data...</p>
                 </div>
 
+                <!-- Error Message -->
+                <div class="error-message" id="errorMessage" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Unable to connect to the server. Please make sure your Flask backend is running on http://localhost:5000</p>
+                    <button onclick="refreshData()" class="retry-btn">Retry</button>
+                </div>
 
-
-                <div class="card stat-card">
-                    <div class="stat-icon purple">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-details">
-                        <h3 class="stat-title">Total Income</h3>
-                        <div class="stat-value">18,472</div>
-                        <div class="stat-change positive">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>12.5%</span>
-                            <span class="period">vs last month</span>
+                <section class="card-grid overview-cards">
+                    <div class="card stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3 class="stat-title">Total Transactions</h3>
+                            <div class="stat-value" id="totalTransactions">-</div>
+                            <div class="stat-change" id="transactionsTrend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>-</span>
+                                <span class="period">vs last month</span>
+                            </div>
+                        </div>
+                        <div class="stat-chart">
+                            <canvas id="transactionsChart" width="65" height="34"></canvas>
                         </div>
                     </div>
-                    <div class="stat-chart" id="ordersChart"></div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-icon orange">
-                        <i class="fas fa-dollar-sign"></i>
+                    
+                    <div class="card stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3 class="stat-title">Total Volume</h3>
+                            <div class="stat-value" id="totalVolume">-</div>
+                            <div class="stat-change" id="volumeTrend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>-</span>
+                                <span class="period">vs last month</span>
+                            </div>
+                        </div>
+                        <div class="stat-chart">
+                            <canvas id="volumeChart" width="60" height="30"></canvas>
+                        </div>
                     </div>
-                    <div class="stat-details">
-                        <h3 class="stat-title">Total Expense</h3>
-                        <div class="stat-value">$328</div>
-                        <div class="stat-change negative">
+                    
+                    <div class="card stat-card">
+                        <div class="stat-icon emerald">
                             <i class="fas fa-arrow-down"></i>
-                            <span>2.7%</span>
-                            <span class="period">vs last month</span>
                         </div>
-                    </div>
-                    <div class="stat-chart" id="avgOrderChart"></div>
-                </div>
-            </section>
-
-
-            <section class="card-grid main-charts">
-                <div class="card chart-card large">
-                    <div class="card-header">
-                        <h2 class="card-title">Recent Transactions</h2>
-                        <div class="card-actions">
-
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <canvas id="revenueOverviewChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card chart-card medium">
-                    <div class="card-header">
-                        <h2 class="card-title">View Transaction Details</h2>
-                        <div class="card-actions">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container donut-container">
-                            <canvas id="salesByCategoryChart"></canvas>
-                        </div>
-                        <div class="chart-legend" id="categoryLegend"></div>
-                    </div>
-                </div>
-
-                <div class="card chart-card medium">
-                    <div class="card-header">
-                        <h2 class="card-title">Chart</h2>
-                        <div class="card-actions">
-
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <canvas id="customerGrowthChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            <section class="card-grid bottom-charts">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Monthly Trends</h2>
-                    </div>
-                    <div class="card-content">
-                        <canvas id="trendsChart" width="300" height="200"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <div class="legend-color payments-color"></div>
-                                <span>Payments</span>
+                        <div class="stat-details">
+                            <h3 class="stat-title">Incoming Money</h3>
+                            <div class="stat-value" id="incomingMoney">-</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Deposits & Transfers</span>
                             </div>
-                            <div class="legend-item">
-                                <div class="legend-color deposits-color"></div>
-                                <span>Deposits</span>
+                        </div>
+                        <div class="stat-chart">
+                            <canvas id="incomingChart" width="60" height="30"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3 class="stat-title">Outgoing Money</h3>
+                            <div class="stat-value" id="outgoingMoney">-</div>
+                            <div class="stat-change">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Payments & Withdrawals</span>
+                            </div>
+                        </div>
+                        <div class="stat-chart">
+                            <canvas id="outgoingChart" width="60" height="30"></canvas>
+                        </div>
+                    </div>
+                </section>
+              
+                <section class="card-grid main-charts">
+                    <div class="card chart-card large">
+                        <div class="card-header">
+                            <h2 class="card-title">Transaction Analysis</h2>
+                            <div class="card-actions">
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" onclick="togglePeriod()">
+                                        <span id="currentPeriod">Daily View</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="timeAnalysisChart"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="card chart-card medium">
+                        <div class="card-header">
+                            <h2 class="card-title">Category Distribution</h2>
+                            <div class="card-actions">
+                                <button class="action-button" onclick="refreshCategoryData()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container donut-container">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                            <div class="chart-legend" id="categoryLegend"></div>
+                        </div>
+                    </div>
+                </section>
 
-
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Transaction Volume by Type</h2>
+                <section class="card-grid activity-products">
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recent Transactions</h2>
+                            <div class="card-actions">
+                                <div class="dropdown">
+                                    <select id="categoryFilter" onchange="filterTransactions()" class="category-select">
+                                        <option value="">All Categories</option>
+                                    </select>
+                                </div>
+                                <button class="action-button" onclick="refreshTransactions()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th onclick="sortTable('transaction_id')">Transaction ID <i class="fas fa-sort"></i></th>
+                                            <th onclick="sortTable('date')">Date <i class="fas fa-sort"></i></th>
+                                            <th onclick="sortTable('amount')">Amount <i class="fas fa-sort"></i></th>
+                                            <th>Category</th>
+                                            <th>Counterparty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transactionsTableBody">
+                                        <tr>
+                                            <td colspan="5" class="loading-cell">Loading transactions...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <div class="pagination-info">
+                                    <span id="paginationInfo">Showing 0 of 0 transactions</span>
+                                </div>
+                                <div class="filter-info hidden" id="filterInfo">
+                                    <span id="filterInfoText"></span>
+                                    <button class="clear-filter-btn" onclick="clearCategoryFilter()">Show All</button>
+                                </div>
+                                <div class="pagination-controls">
+                                    <button id="prevPage" onclick="changePage(-1)" disabled>Prevous</button>
+                                    <span id="pageNumbers"></span>
+                                    <button id="nextPage" onclick="changePage(1)" disabled>Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Category Summary</h2>
+                            <div class="card-actions">
+                                <button class="action-button" onclick="refreshCategorySummary()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="category-list" id="categorySummary">
+                                <li class="category-item">
+                                    <div class="category-info">
+                                        <h4>Loading...</h4>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="card-content">
-                <canvas id="volumeChart" width="300" height="200"></canvas>
-            </div>
-        </div>
-            </section>
+        </main>
+    </div>
 
-
-
-
-            </div>
-
-    </main>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
