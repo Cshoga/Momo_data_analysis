@@ -7,6 +7,8 @@ import os
 
 class EfficientSMSParser:
     def __init__(self, db_path="momo.db", xml_path="modified_sms_v2.xml", log_path="unprocessed.txt"):
+        
+        # Paths to database, XML data file, and log for unprocessed messages
         self.db_path = db_path
         self.xml_path = xml_path
         self.log_path = log_path
