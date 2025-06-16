@@ -39,9 +39,10 @@ The application works in a sequence that;
 
 ## Setup Instructions
 
+Clone the Repoitory: https://github.com/Cshoga/Momo_data_analysis.git
+
 ### Prerequisites
 - Python 3.x
-- Node.js (for serving the frontend)
 - SQLite3 (included with Python)
 
 ### Backend Setup
